@@ -1,0 +1,4 @@
+camel-rabbitmq
+==============
+
+camel-rabbitmq
