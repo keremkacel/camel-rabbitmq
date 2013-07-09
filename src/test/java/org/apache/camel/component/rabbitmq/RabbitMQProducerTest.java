@@ -95,4 +95,28 @@ public class RabbitMQProducerTest {
         AMQP.BasicProperties props = producer.buildProperties(exchange).build();
         assertEquals(15, props.getPriority().intValue());
     }
+
+    @Test
+    public void testPropertiesUsesExpirationHeader() throws IOException {
+        RabbitMQProducer producer = new RabbitMQProducer(endpoint);
+        message.setHeader(RabbitMQConstants.EXPIRATION, "thursday");
+        AMQP.BasicProperties props = producer.buildProperties(exchange).build();
+        assertEquals("thursday", props.getExpiration());
+    }
+
+    @Test
+    public void testPropertiesUsesTypeHeader() throws IOException {
+        RabbitMQProducer producer = new RabbitMQProducer(endpoint);
+        message.setHeader(RabbitMQConstants.TYPE, "sometype");
+        AMQP.BasicProperties props = producer.buildProperties(exchange).build();
+        assertEquals("sometype", props.getType());
+    }
+
+    @Test
+    public void testPropertiesUsesContentEncodingHeader() throws IOException {
+        RabbitMQProducer producer = new RabbitMQProducer(endpoint);
+        message.setHeader(RabbitMQConstants.CONTENT_ENCODING, "qwergghdfdfgdfgg");
+        AMQP.BasicProperties props = producer.buildProperties(exchange).build();
+        assertEquals("qwergghdfdfgdfgg", props.getContentEncoding());
+    }
 }

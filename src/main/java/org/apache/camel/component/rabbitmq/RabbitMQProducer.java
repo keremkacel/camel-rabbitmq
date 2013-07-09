@@ -76,6 +76,18 @@ public class RabbitMQProducer extends DefaultProducer {
         if (userId != null)
             properties.userId(userId.toString());
 
+        final Object type = exchange.getIn().getHeader(RabbitMQConstants.TYPE);
+        if (type != null)
+            properties.type(type.toString());
+
+        final Object CONTENT_ENCODING = exchange.getIn().getHeader(RabbitMQConstants.CONTENT_ENCODING);
+        if (CONTENT_ENCODING != null)
+            properties.contentEncoding(CONTENT_ENCODING.toString());
+
+        final Object EXPIRATION = exchange.getIn().getHeader(RabbitMQConstants.EXPIRATION);
+        if (EXPIRATION != null)
+            properties.expiration(EXPIRATION.toString());
+
         return properties;
     }
 }
