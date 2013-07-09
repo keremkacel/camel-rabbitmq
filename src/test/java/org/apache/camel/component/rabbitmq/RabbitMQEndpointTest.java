@@ -20,10 +20,10 @@ public class RabbitMQEndpointTest {
     private Envelope envelope = Mockito.mock(Envelope.class);
 
     @Test
-    public void testCreatingRabbitExchangeSetsHeaders() {
+    public void testCreatingRabbitExchangeSetsHeaders() throws URISyntaxException {
         RabbitMQEndpoint
                 endpoint =
-                new RabbitMQEndpoint("rabbitmq:http://localhost/db", "http://localhost/db", new RabbitMQComponent());
+                new RabbitMQEndpoint("rabbitmq:localhost/db", "localhost/db", new RabbitMQComponent());
 
         String routingKey = UUID.randomUUID().toString();
         String exchangeName = UUID.randomUUID().toString();
@@ -44,7 +44,7 @@ public class RabbitMQEndpointTest {
 
         RabbitMQEndpoint
                 endpoint =
-                new RabbitMQEndpoint("rabbitmq:http://localhost/db", "http://localhost/db", new RabbitMQComponent());
+                new RabbitMQEndpoint("rabbitmq:localhost/db", "localhost/db", new RabbitMQComponent());
         endpoint.setThreadPoolSize(400);
         ThreadPoolExecutor executor = endpoint.createExecutor();
 
@@ -55,7 +55,7 @@ public class RabbitMQEndpointTest {
     public void assertSingleton() throws URISyntaxException {
         RabbitMQEndpoint
                 endpoint =
-                new RabbitMQEndpoint("rabbitmq:http://localhost/db", "http://localhost/db", new RabbitMQComponent());
+                new RabbitMQEndpoint("rabbitmq:localhost/db", "localhost/db", new RabbitMQComponent());
         assertTrue(endpoint.isSingleton());
     }
 }

@@ -28,16 +28,16 @@ public class RabbitMQComponentTest {
         params.put("hostname", "special.host");
         params.put("queueName", "queuey");
 
-        String uri = "couchdb:http://localhost:14/db";
-        String remaining = "http://localhost:14/db";
+        String uri = "rabbitmq:special.host:14/queuey";
+        String remaining = "special.host:14/queuey";
 
         RabbitMQEndpoint endpoint = new RabbitMQComponent(context).createEndpoint(uri, remaining, params);
-        assertEquals("special.host", endpoint.getHostname());
         assertEquals("chrism", endpoint.getPassword());
         assertEquals("coldplay", endpoint.getUsername());
         assertEquals("queuey", endpoint.getQueueName());
         assertEquals("vman", endpoint.getVirtualHost());
-        assertEquals(14123, endpoint.getPortNumber());
+        assertEquals("special.host", endpoint.getHostname());
+        assertEquals(14, endpoint.getPortNumber());
         assertEquals(515, endpoint.getThreadPoolSize());
         assertEquals(true, endpoint.isAutoAck());
     }

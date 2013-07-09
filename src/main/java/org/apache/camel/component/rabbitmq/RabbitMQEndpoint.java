@@ -13,6 +13,8 @@ import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -51,15 +53,18 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
         return queueName;
     }
 
-    public void setQueueName(String queueName) {
-        this.queueName = queueName;
-    }
-
     public RabbitMQEndpoint() {
     }
 
-    public RabbitMQEndpoint(String endpointUri, String remaining, RabbitMQComponent component) {
+    public RabbitMQEndpoint(String endpointUri,
+                            String remaining,
+                            RabbitMQComponent component) throws URISyntaxException {
         super(endpointUri, component);
+
+        URI uri = new URI("http://" + remaining);
+        hostname = uri.getHost();
+        portNumber = uri.getPort();
+        queueName = uri.getPath().substring(1);
     }
 
     public Exchange createRabbitExchange(Envelope envelope) {
@@ -132,14 +137,6 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
 
     public void setVirtualHost(String virtualHost) {
         this.virtualHost = virtualHost;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public void setPortNumber(int portNumber) {
-        this.portNumber = portNumber;
     }
 
     public ThreadPoolExecutor createExecutor() {
