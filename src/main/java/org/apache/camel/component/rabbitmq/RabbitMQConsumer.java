@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author Stephen Samuel
@@ -23,9 +22,9 @@ public class RabbitMQConsumer extends DefaultConsumer {
 
     private final RabbitMQEndpoint endpoint;
 
-    private ExecutorService executor;
-    private Connection conn;
-    private Channel channel;
+    ExecutorService executor;
+    Connection conn;
+    Channel channel;
 
     public RabbitMQConsumer(RabbitMQEndpoint endpoint, Processor processor) {
         super(endpoint, processor);
@@ -37,8 +36,7 @@ public class RabbitMQConsumer extends DefaultConsumer {
         super.doStart();
         log.info("Starting RabbitMQ consumer");
 
-        executor = Executors.newFixedThreadPool(endpoint.getThreadPoolSize());
-
+        executor = endpoint.createExecutor();
         conn = endpoint.connect(executor);
 
         channel = conn.createChannel();

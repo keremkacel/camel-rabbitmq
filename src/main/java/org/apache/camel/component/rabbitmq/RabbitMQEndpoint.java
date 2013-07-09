@@ -1,6 +1,5 @@
 package org.apache.camel.component.rabbitmq;
 
-import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Envelope;
@@ -15,6 +14,9 @@ import org.apache.camel.impl.DefaultMessage;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+
+import static java.util.concurrent.Executors.newFixedThreadPool;
 
 /**
  * @author Stephen Samuel
@@ -57,7 +59,7 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
     public RabbitMQEndpoint() {
     }
 
-    public RabbitMQEndpoint(String endpointUri, String remaining, RabbitMQComponent component) throws Exception {
+    public RabbitMQEndpoint(String endpointUri, String remaining, RabbitMQComponent component) {
         super(endpointUri, component);
     }
 
@@ -88,11 +90,7 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
         factory.setVirtualHost(getVirtualHost());
         factory.setHost(getHostname());
         factory.setPort(getPortNumber());
-        Connection conn = factory.newConnection(executor);
-        Channel channel = conn.createChannel();
-        channel.close();
-        conn.close();
-        return conn;
+        return factory.newConnection(executor);
     }
 
     @Override
@@ -143,5 +141,9 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
 
     public void setPortNumber(int portNumber) {
         this.portNumber = portNumber;
+    }
+
+    public ThreadPoolExecutor createExecutor() {
+        return (ThreadPoolExecutor) newFixedThreadPool(getThreadPoolSize());
     }
 }
