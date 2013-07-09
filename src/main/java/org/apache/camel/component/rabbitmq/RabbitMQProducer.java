@@ -56,6 +56,10 @@ public class RabbitMQProducer extends DefaultProducer {
         if (messageId != null)
             properties.messageId(messageId.toString());
 
+        final Object clusterId = exchange.getIn().getHeader(RabbitMQConstants.CLUSTERID);
+        if (clusterId != null)
+            properties.clusterId(clusterId.toString());
+
         final Object correlationId = exchange.getIn().getHeader(RabbitMQConstants.CORRELATIONID);
         if (correlationId != null)
             properties.correlationId(correlationId.toString());

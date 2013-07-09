@@ -71,4 +71,12 @@ public class RabbitMQProducerTest {
         AMQP.BasicProperties props = producer.buildProperties(exchange).build();
         assertEquals(444, props.getDeliveryMode().intValue());
     }
+
+    @Test
+    public void testPropertiesUsesClusterIdHeader() throws IOException {
+        RabbitMQProducer producer = new RabbitMQProducer(endpoint);
+        message.setHeader(RabbitMQConstants.CLUSTERID, "abtasg5r");
+        AMQP.BasicProperties props = producer.buildProperties(exchange).build();
+        assertEquals("abtasg5r", props.getClusterId());
+    }
 }
