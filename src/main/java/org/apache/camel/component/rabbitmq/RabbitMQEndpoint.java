@@ -14,9 +14,8 @@ import org.apache.camel.impl.DefaultMessage;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-
-import static java.util.concurrent.Executors.newFixedThreadPool;
 
 /**
  * @author Stephen Samuel
@@ -144,6 +143,6 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
     }
 
     public ThreadPoolExecutor createExecutor() {
-        return (ThreadPoolExecutor) newFixedThreadPool(getThreadPoolSize());
+        return (ThreadPoolExecutor) Executors.newFixedThreadPool(getThreadPoolSize());
     }
 }

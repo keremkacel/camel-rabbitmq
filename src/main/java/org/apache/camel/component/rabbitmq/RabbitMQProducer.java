@@ -7,6 +7,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultProducer;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
 
 /**
  * @author Stephen Samuel
@@ -18,7 +19,7 @@ public class RabbitMQProducer extends DefaultProducer {
 
     public RabbitMQProducer(RabbitMQEndpoint endpoint) throws IOException {
         super(endpoint);
-        this.conn = endpoint.connect(null);
+        this.conn = endpoint.connect(Executors.newSingleThreadExecutor());
         this.channel = conn.createChannel();
     }
 
@@ -40,7 +41,7 @@ public class RabbitMQProducer extends DefaultProducer {
                 messageBodyBytes);
     }
 
-    private AMQP.BasicProperties.Builder buildProperties(Exchange exchange) {
+    AMQP.BasicProperties.Builder buildProperties(Exchange exchange) {
         AMQP.BasicProperties.Builder properties = new AMQP.BasicProperties.Builder();
 
         final Object contentType = exchange.getIn().getHeader(RabbitMQConstants.CONTENT_TYPE);
@@ -58,6 +59,14 @@ public class RabbitMQProducer extends DefaultProducer {
         final Object correlationId = exchange.getIn().getHeader(RabbitMQConstants.CORRELATIONID);
         if (correlationId != null)
             properties.correlationId(correlationId.toString());
+
+        final Object deliveryMode = exchange.getIn().getHeader(RabbitMQConstants.DELIVERY_MODE);
+        if (deliveryMode != null)
+            properties.deliveryMode(Integer.parseInt(deliveryMode.toString()));
+
+        final Object userId = exchange.getIn().getHeader(RabbitMQConstants.USERID);
+        if (userId != null)
+            properties.userId(userId.toString());
 
         return properties;
     }
