@@ -28,16 +28,29 @@ public class RabbitMQConsumerTest {
     public void testStoppingConsumerShutsdownExecutor() throws Exception {
         RabbitMQConsumer consumer = new RabbitMQConsumer(endpoint, processor);
 
+        ThreadPoolExecutor e = (ThreadPoolExecutor) Executors.newFixedThreadPool(3);
+        Mockito.when(endpoint.createExecutor()).thenReturn(e);
+        Mockito.when(endpoint.connect(Matchers.any(ExecutorService.class))).thenReturn(conn);
+        Mockito.when(conn.createChannel()).thenReturn(channel);
+
+        consumer.doStart();
+        assertFalse(e.isShutdown());
+
+        consumer.doStop();
+        assertTrue(e.isShutdown());
+    }
+
+    @Test
+    public void testStoppingConsumerShutsdownConnection() throws Exception {
+        RabbitMQConsumer consumer = new RabbitMQConsumer(endpoint, processor);
+
         Mockito.when(endpoint.createExecutor()).thenReturn((ThreadPoolExecutor) Executors.newFixedThreadPool(3));
         Mockito.when(endpoint.connect(Matchers.any(ExecutorService.class))).thenReturn(conn);
         Mockito.when(conn.createChannel()).thenReturn(channel);
 
         consumer.doStart();
-        ExecutorService e = consumer.executor;
-
-        assertFalse(e.isShutdown());
-
         consumer.doStop();
-        assertTrue(e.isShutdown());
+
+        Mockito.verify(conn).close();
     }
 }
