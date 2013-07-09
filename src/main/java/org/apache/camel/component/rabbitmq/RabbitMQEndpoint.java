@@ -25,9 +25,18 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
     private String password;
     private String virtualHost;
     private String hostname;
+    private int threadPoolSize = 10;
     private int portNumber;
     private boolean autoAck;
     private String queueName;
+
+    public int getThreadPoolSize() {
+        return threadPoolSize;
+    }
+
+    public void setThreadPoolSize(int threadPoolSize) {
+        this.threadPoolSize = threadPoolSize;
+    }
 
     public boolean isAutoAck() {
         return autoAck;

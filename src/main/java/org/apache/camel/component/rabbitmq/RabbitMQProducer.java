@@ -32,17 +32,33 @@ public class RabbitMQProducer extends DefaultProducer {
         Object key = exchange.getIn().getHeader(RabbitMQConstants.ROUTING_KEY);
         String exchangeName = exchange.getIn().getHeader(RabbitMQConstants.EXCHANGE_NAME).toString();
         byte[] messageBodyBytes = exchange.getIn().getBody(byte[].class);
-
-        AMQP.BasicProperties.Builder properties = new AMQP.BasicProperties.Builder();
-        if (exchange.getIn().getHeader(RabbitMQConstants.CONTENT_TYPE) != null)
-            properties.contentType(exchange.getIn().getHeader(RabbitMQConstants.CONTENT_TYPE).toString());
-        if (exchange.getIn().getHeader(RabbitMQConstants.PRIORITY) != null)
-            properties.priority(Integer.parseInt(exchange.getIn().getHeader(RabbitMQConstants.PRIORITY).toString()));
+        AMQP.BasicProperties.Builder properties = buildProperties(exchange);
 
         channel.basicPublish(exchangeName,
                 key == null ? "" : key.toString(),
                 properties.build(),
                 messageBodyBytes);
+    }
 
+    private AMQP.BasicProperties.Builder buildProperties(Exchange exchange) {
+        AMQP.BasicProperties.Builder properties = new AMQP.BasicProperties.Builder();
+
+        final Object contentType = exchange.getIn().getHeader(RabbitMQConstants.CONTENT_TYPE);
+        if (contentType != null)
+            properties.contentType(contentType.toString());
+
+        final Object priority = exchange.getIn().getHeader(RabbitMQConstants.PRIORITY);
+        if (priority != null)
+            properties.priority(Integer.parseInt(priority.toString()));
+
+        final Object messageId = exchange.getIn().getHeader(RabbitMQConstants.MESSAGE_ID);
+        if (messageId != null)
+            properties.messageId(messageId.toString());
+
+        final Object correlationId = exchange.getIn().getHeader(RabbitMQConstants.CORRELATIONID);
+        if (correlationId != null)
+            properties.correlationId(correlationId.toString());
+
+        return properties;
     }
 }

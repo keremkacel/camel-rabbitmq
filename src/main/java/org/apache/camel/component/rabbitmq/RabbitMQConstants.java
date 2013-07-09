@@ -9,4 +9,6 @@ public class RabbitMQConstants {
     public static final String CONTENT_TYPE = "rabbitmq.CONTENT_TYPE";
     public static final String PRIORITY = "rabbitmq.PRIORITY";
     public static final String DELIVERY_TAG = "rabbitmq.DELIVERY_TAG";
+    public static final String CORRELATIONID = "rabbitmq.CORRELATIONID";
+    public static final String MESSAGE_ID = "rabbitmq.MESSAGE_ID";
 }
