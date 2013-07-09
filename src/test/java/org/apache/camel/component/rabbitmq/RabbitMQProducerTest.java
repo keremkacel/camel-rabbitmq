@@ -79,4 +79,20 @@ public class RabbitMQProducerTest {
         AMQP.BasicProperties props = producer.buildProperties(exchange).build();
         assertEquals("abtasg5r", props.getClusterId());
     }
+
+    @Test
+    public void testPropertiesUsesReplyToHeader() throws IOException {
+        RabbitMQProducer producer = new RabbitMQProducer(endpoint);
+        message.setHeader(RabbitMQConstants.REPLY_TO, "bbbbdfgdfg");
+        AMQP.BasicProperties props = producer.buildProperties(exchange).build();
+        assertEquals("bbbbdfgdfg", props.getReplyTo());
+    }
+
+    @Test
+    public void testPropertiesUsesPriorityHeader() throws IOException {
+        RabbitMQProducer producer = new RabbitMQProducer(endpoint);
+        message.setHeader(RabbitMQConstants.PRIORITY, "15");
+        AMQP.BasicProperties props = producer.buildProperties(exchange).build();
+        assertEquals(15, props.getPriority().intValue());
+    }
 }
