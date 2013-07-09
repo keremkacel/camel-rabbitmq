@@ -15,6 +15,7 @@ import org.apache.camel.impl.DefaultMessage;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -26,12 +27,22 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
 
     private String username;
     private String password;
-    private String virtualHost;
+    private String vhost;
     private String hostname;
     private int threadPoolSize = 10;
     private int portNumber;
-    private boolean autoAck;
-    private String queueName;
+    private boolean autoAck = true;
+    private String queue = String.valueOf(UUID.randomUUID().toString().hashCode());
+    private String exchangeName;
+    private String routingKey;
+
+    public String getExchangeName() {
+        return exchangeName;
+    }
+
+    public void setQueue(String queue) {
+        this.queue = queue;
+    }
 
     public int getThreadPoolSize() {
         return threadPoolSize;
@@ -49,8 +60,16 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
         this.autoAck = autoAck;
     }
 
-    public String getQueueName() {
-        return queueName;
+    public String getQueue() {
+        return queue;
+    }
+
+    public String getRoutingKey() {
+        return routingKey;
+    }
+
+    public void setRoutingKey(String routingKey) {
+        this.routingKey = routingKey;
     }
 
     public RabbitMQEndpoint() {
@@ -64,7 +83,7 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
         URI uri = new URI("http://" + remaining);
         hostname = uri.getHost();
         portNumber = uri.getPort();
-        queueName = uri.getPath().substring(1);
+        exchangeName = uri.getPath().substring(1);
     }
 
     public Exchange createRabbitExchange(Envelope envelope) {
@@ -91,7 +110,10 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setUsername(getUsername());
         factory.setPassword(getPassword());
-        factory.setVirtualHost(getVirtualHost());
+        if (getVhost() == null)
+            factory.setVirtualHost("/");
+        else
+            factory.setVirtualHost(getVhost());
         factory.setHost(getHostname());
         factory.setPort(getPortNumber());
         return factory.newConnection(executor);
@@ -115,8 +137,8 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
         return hostname;
     }
 
-    public String getVirtualHost() {
-        return virtualHost;
+    public String getVhost() {
+        return vhost;
     }
 
     public String getPassword() {
@@ -135,8 +157,8 @@ public class RabbitMQEndpoint extends DefaultEndpoint {
         this.password = password;
     }
 
-    public void setVirtualHost(String virtualHost) {
-        this.virtualHost = virtualHost;
+    public void setVhost(String vhost) {
+        this.vhost = vhost;
     }
 
     public ThreadPoolExecutor createExecutor() {

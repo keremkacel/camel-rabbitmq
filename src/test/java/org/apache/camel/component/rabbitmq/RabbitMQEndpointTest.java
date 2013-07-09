@@ -21,9 +21,8 @@ public class RabbitMQEndpointTest {
 
     @Test
     public void testCreatingRabbitExchangeSetsHeaders() throws URISyntaxException {
-        RabbitMQEndpoint
-                endpoint =
-                new RabbitMQEndpoint("rabbitmq:localhost/db", "localhost/db", new RabbitMQComponent());
+        RabbitMQEndpoint endpoint =
+                new RabbitMQEndpoint("rabbitmq:localhost/exchange", "localhost/exchange", new RabbitMQComponent());
 
         String routingKey = UUID.randomUUID().toString();
         String exchangeName = UUID.randomUUID().toString();
@@ -42,9 +41,8 @@ public class RabbitMQEndpointTest {
     @Test
     public void creatingExecutorUsesThreadPoolSettings() throws Exception {
 
-        RabbitMQEndpoint
-                endpoint =
-                new RabbitMQEndpoint("rabbitmq:localhost/db", "localhost/db", new RabbitMQComponent());
+        RabbitMQEndpoint endpoint =
+                new RabbitMQEndpoint("rabbitmq:localhost/exchange", "localhost/exchange", new RabbitMQComponent());
         endpoint.setThreadPoolSize(400);
         ThreadPoolExecutor executor = endpoint.createExecutor();
 
@@ -53,9 +51,8 @@ public class RabbitMQEndpointTest {
 
     @Test
     public void assertSingleton() throws URISyntaxException {
-        RabbitMQEndpoint
-                endpoint =
-                new RabbitMQEndpoint("rabbitmq:localhost/db", "localhost/db", new RabbitMQComponent());
+        RabbitMQEndpoint endpoint =
+                new RabbitMQEndpoint("rabbitmq:localhost/exchange", "localhost/exchange", new RabbitMQComponent());
         assertTrue(endpoint.isSingleton());
     }
 }

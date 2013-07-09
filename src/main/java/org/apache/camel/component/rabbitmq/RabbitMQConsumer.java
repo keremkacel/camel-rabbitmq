@@ -37,10 +37,20 @@ public class RabbitMQConsumer extends DefaultConsumer {
         log.info("Starting RabbitMQ consumer");
 
         executor = endpoint.createExecutor();
+        logger.debug("Using executor {}", executor);
+
         conn = endpoint.connect(executor);
+        logger.debug("Using conn {}", conn);
 
         channel = conn.createChannel();
-        channel.basicConsume(endpoint.getQueueName(), endpoint.isAutoAck(), new RabbitConsumer(this, channel));
+        logger.debug("Using channel {}", channel);
+
+        channel.exchangeDeclare(endpoint.getExchangeName(), "direct", true);
+        channel.queueDeclare(endpoint.getQueue(), true, false, false, null);
+        channel.queueBind(endpoint.getQueue(), endpoint.getExchangeName(),
+                endpoint.getRoutingKey() == null ? "" : endpoint.getRoutingKey());
+
+        channel.basicConsume(endpoint.getQueue(), endpoint.isAutoAck(), new RabbitConsumer(this, channel));
     }
 
     @Override
