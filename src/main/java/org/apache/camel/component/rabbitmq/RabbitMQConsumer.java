@@ -58,7 +58,10 @@ public class RabbitMQConsumer extends DefaultConsumer {
         super.doStop();
         log.info("Stopping RabbitMQ consumer");
         if (conn != null)
-            conn.close();
+            try {
+                conn.close();
+            } catch (Exception ignored) { }
+
         channel = null;
         conn = null;
         executor.shutdown();
@@ -95,7 +98,7 @@ public class RabbitMQConsumer extends DefaultConsumer {
                 consumer.getProcessor().process(exchange);
 
                 long deliveryTag = envelope.getDeliveryTag();
-                logger.trace("Ackknowleding receipt [delivery_tag={}]", deliveryTag);
+                logger.trace("Acknowleding receipt [delivery_tag={}]", deliveryTag);
                 channel.basicAck(deliveryTag, false);
 
             } catch (Exception e) {
