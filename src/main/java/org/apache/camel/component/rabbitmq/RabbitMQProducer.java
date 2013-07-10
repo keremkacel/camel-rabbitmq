@@ -7,6 +7,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultProducer;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.Executors;
 
 /**
@@ -82,13 +83,21 @@ public class RabbitMQProducer extends DefaultProducer {
         if (type != null)
             properties.type(type.toString());
 
-        final Object CONTENT_ENCODING = exchange.getIn().getHeader(RabbitMQConstants.CONTENT_ENCODING);
-        if (CONTENT_ENCODING != null)
-            properties.contentEncoding(CONTENT_ENCODING.toString());
+        final Object contentEncoding = exchange.getIn().getHeader(RabbitMQConstants.CONTENT_ENCODING);
+        if (contentEncoding != null)
+            properties.contentEncoding(contentEncoding.toString());
 
-        final Object EXPIRATION = exchange.getIn().getHeader(RabbitMQConstants.EXPIRATION);
-        if (EXPIRATION != null)
-            properties.expiration(EXPIRATION.toString());
+        final Object expiration = exchange.getIn().getHeader(RabbitMQConstants.EXPIRATION);
+        if (expiration != null)
+            properties.expiration(expiration.toString());
+
+        final Object appId = exchange.getIn().getHeader(RabbitMQConstants.APP_ID);
+        if (appId != null)
+            properties.appId(appId.toString());
+
+        final Object timestamp = exchange.getIn().getHeader(RabbitMQConstants.TIMESTAMP);
+        if (timestamp != null)
+            properties.timestamp(new Date(Long.parseLong(timestamp.toString())));
 
         return properties;
     }

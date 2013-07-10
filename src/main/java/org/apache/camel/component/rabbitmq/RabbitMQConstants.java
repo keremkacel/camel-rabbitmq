@@ -18,4 +18,6 @@ public class RabbitMQConstants {
     public static final String CONTENT_ENCODING = "rabbitmq.CONTENT_ENCODING";
     public static final String TYPE = "rabbitmq.TYPE";
     public static final String EXPIRATION = "rabbitmq.EXPIRATION";
+    public static final String TIMESTAMP = "rabbitmq.TIMESTAMP";
+    public static final String APP_ID = "rabbitmq.APP_ID";
 }

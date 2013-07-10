@@ -119,4 +119,20 @@ public class RabbitMQProducerTest {
         AMQP.BasicProperties props = producer.buildProperties(exchange).build();
         assertEquals("qwergghdfdfgdfgg", props.getContentEncoding());
     }
+
+    @Test
+    public void testPropertiesAppIdHeader() throws IOException {
+        RabbitMQProducer producer = new RabbitMQProducer(endpoint);
+        message.setHeader(RabbitMQConstants.APP_ID, "qweeqwe");
+        AMQP.BasicProperties props = producer.buildProperties(exchange).build();
+        assertEquals("qweeqwe", props.getAppId());
+    }
+
+    @Test
+    public void testPropertiesUsesTimestampHeader() throws IOException {
+        RabbitMQProducer producer = new RabbitMQProducer(endpoint);
+        message.setHeader(RabbitMQConstants.TIMESTAMP, "12345123");
+        AMQP.BasicProperties props = producer.buildProperties(exchange).build();
+        assertEquals(12345123, props.getTimestamp().getTime());
+    }
 }
