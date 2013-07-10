@@ -14,11 +14,13 @@ import java.util.concurrent.Executors;
  */
 public class RabbitMQProducer extends DefaultProducer {
 
+    private final RabbitMQEndpoint endpoint;
     private Connection conn;
     private Channel channel;
 
     public RabbitMQProducer(RabbitMQEndpoint endpoint) throws IOException {
         super(endpoint);
+        this.endpoint = endpoint;
         this.conn = endpoint.connect(Executors.newSingleThreadExecutor());
         this.channel = conn.createChannel();
     }
