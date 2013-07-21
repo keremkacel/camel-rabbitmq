@@ -1,7 +1,6 @@
 ##RabbitMQ Camel Component 
 
-*Part of standard Camel distribution as of Camel 2.12*
-*Updates are now being commited to the Camel repository and not to this one*
+*Part of standard Camel distribution as of Camel 2.12 - Updates are now being commited to the Camel repository and not to this one*
 
 The **rabbitmq:** component allows you produce and consume messages from RabbitMQ instances using the standard RabbitMQ AMQP client.
 
